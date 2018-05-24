@@ -1,0 +1,5 @@
+*.pem
+*.csr
+*.p12
+*.bak
+.DS_Store
