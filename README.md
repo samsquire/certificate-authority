@@ -116,7 +116,7 @@ Now inspect the certificate - check the SAN:
 openssl x509 -in certs/server.cert.pem  -text -noout | less
 ```
 
-Veryf that the chain is correct where arrows are signed by: CA <- Intermediate <- Server.
+Verify that the chain is correct where arrows are signed by: CA <- Intermediate <- Server.
 
 ```
 openssl verify -CAfile <(cat intermediate/certs/intermediate.cert.pem certs/ca.cert.pem) -verbose intermediate/certs/server.cert.pem
