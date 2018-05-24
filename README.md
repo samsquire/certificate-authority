@@ -8,7 +8,7 @@ Command summary
 * **create create certificate requests**: req -new
 * **sign certificates**: -config openssl.cnf -in csr -out cert -days x -notext -md sha256
 
-## create the ca
+# create the ca
 
 ```
 openssl genrsa -aes256 -out private/ca.key.pem 4096
