@@ -2,11 +2,13 @@
 
 Command summary
 
-* **create new keys**: genrsa, output key, size, key type (aes256)
-* **create ca certificate**: create a new x509 certificate immediately
-  -x509
-* **create create certificate requests**: req -new
-* **sign certificates**: -config openssl.cnf -in csr -out cert -days x -notext -md sha256
+* **create new keys**: genrsa -out output.key -aes256 4096 - create a
+  new 4096 bit aes256 private key
+* **create ca certificate**: openssl req -new -x509 -sha256 -days 7300 -key input.key -out output.cert -config openssl.cnf - creates a new root x509 certificate immediately - there is no CSRs because it is self signed
+* **create a normal certificate requests**: openssl req -new -sha256 -config openssl_san.cnf -key input.key -out output.csr
+* **sign server certificates**: openssl ca -config openssl.cnf -extensions server_cert -md sha256 -notext -days 300 -in csr/server.csr.pem -out certs/server.cert.pem
+* **sign intermediate certificates**: openssl ca -config openssl.cnf -extensions v3_intermediate_ca -days 3200 -notext -md sha256 -in intermediate/csr/intermediate.csr.pem -out intermediate/certs/intermediate.cert.pem
+
 
 # create the ca
 
@@ -46,7 +48,7 @@ Create the intermediate Certificate Signing Request
 openssl req -new -sha256 -config openssl.cnf -key private/intermediate.key.pem -out csr/intermediate.csr.pem
 ```
 
-## Sign the intermediate CA
+# Sign the intermediate CA
 
 Go back to root
 
@@ -104,8 +106,7 @@ openssl ca -config openssl.cnf -extensions server_cert -md sha256 -notext -days 
 Check the certificate corresponds to your key:
 
 ```
-diff -q <(openssl rsa -pubout -in private/server.key.pem -passin
-pass:XXX) <(openssl x509 -in certs/server.cert.pem -noout -pubkey)
+diff -q <(openssl rsa -pubout -in private/server.key.pem -passin pass:XXX) <(openssl x509 -in certs/server.cert.pem -noout -pubkey)
 echo $?
 ```
 
